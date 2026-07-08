@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Quality Mini-Project: Python Automation · Ariane Lesnyak</title>
+    <style>
+        /* ── PALETA DE CORES DO INDEX ── */
+        :root {
+            --primary: #0f172a;
+            --primary-light: #eef2ff;
+            --accent: #2563eb;
+            --accent-light: #60a5fa;
+            --border: #e9edf2;
+            --border-light: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #475569;
+            --bg-light: #f8fafc;
+            --gray-dark: #4a5568;
+            --gray-medium: #718096;
+            --gray-light: #edf2f7;
+            --success: #2f855a;
+            --danger: #c53030;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg-light);
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            font-size: 10.5pt;
+        }
+
+        /* ── CASE HEADER ── */
+        .case-header {
+            text-align: center;
+            border-bottom: 3px solid var(--accent);
+            padding: 2rem 1.5rem;
+            margin-bottom: 2rem;
+            background: var(--card);
+            border-radius: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+        }
+
+        .case-number {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            background: var(--primary-light);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+
+        .case-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.25rem;
+        }
+
+        .case-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .case-tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .case-tag {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* ── SECTIONS ── */
+        section {
+            margin-bottom: 2.5rem;
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 1.25rem;
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.3px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 1.25rem 0 0.75rem 0;
+            border-left: 4px solid var(--accent);
+            padding-left: 0.75rem;
+        }
+
+        /* ── CONTEXT BOX ── */
+        .context-box {
+            background: var(--bg-light);
+            padding: 1.25rem;
+            border-left: 4px solid var(--accent);
+            border-radius: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        /* ── TWO COLUMNS ── */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .problem-box, .solution-box {
+            background: var(--bg-light);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+        }
+
+        .problem-box h3, .solution-box h3 {
+            text-align: center;
+            border: none;
+            padding-left: 0;
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .problem-box ul, .solution-box ul {
+            list-style: none;
+            padding: 0;
+            font-size: 0.9rem;
+        }
+
+        .problem-box li, .solution-box li {
+            padding-left: 1.2rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .problem-box li::before, .solution-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* ── CODE BLOCK ── */
+        .code-block {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            margin: 1.25rem 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .code-keyword { color: #60a5fa; }
+        .code-function { color: #f472b6; }
+        .code-string { color: #34d399; }
+        .code-comment { color: #94a3b8; }
+
+        /* ── BEFORE / AFTER ── */
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin: 1.25rem 0;
+        }
+
+        .before-box, .after-box {
+            background: var(--bg-light);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 2px solid var(--border);
+        }
+
+        .before-box { border-color: var(--danger); }
+        .after-box { border-color: var(--success); }
+
+        .before-box h4, .after-box h4 {
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .before-box h4 { color: var(--danger); }
+        .after-box h4 { color: var(--success); }
+
+        .before-box pre, .after-box pre {
+            background: var(--card);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.7rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+            border: 1px solid var(--border);
+        }
+
+        .before-box p, .after-box p {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            color: var(--text-light);
+        }
+
+        /* ── RESULTS GRID ── */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1.25rem 0;
+        }
+
+        .result-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .result-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        /* ── LISTS ── */
+        ul, ol {
+            margin-left: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ── IMAGE CAPTION ── */
+        .image-caption {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            color: var(--text-light);
+            font-style: italic;
+            text-align: center;
+        }
+
+        .image-caption strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ── RESPONSIVO ── */
+        @media (max-width: 768px) {
+            .two-columns, .before-after {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .results-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .case-header h1 {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media print {
+            body { padding: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CASE HEADER -->
+    <div class="case-header">
+        <div class="case-number">Python Mini-Project</div>
+        <h1>Automated Metadata Structuring for Video Subtitles</h1>
+        <div class="case-subtitle">Optimizing subtitle workflows through Python scripting</div>
+        <div class="case-tags">
+            <span class="case-tag">Python</span>
+            <span class="case-tag">Automation</span>
+            <span class="case-tag">Text Processing</span>
+            <span class="case-tag">Data Structuring</span>
+            <span class="case-tag">Workflow Efficiency</span>
+        </div>
+    </div>
+
+    <!-- 1. CONTEXT -->
+    <section id="context">
+        <h2>1. Context: Real-World Linguistic Workflow Challenge</h2>
+        <div class="context-box">
+            <p style="margin:0; font-size:0.95rem;"><strong>Real-world context:</strong> During subtitle work for a major streaming platform, I faced the challenge of manually adding complex metadata structures to raw subtitle files. Each line required repetitive typing of markers, separators, and mandatory fields — a slow and error-prone process.</p>
+        </div>
+    </section>
+
+    <!-- 2. PROBLEM VS SOLUTION -->
+    <section id="problem-solution">
+        <h2>2. Problem Identification & Methodological Approach</h2>
+        <div class="two-columns">
+            <div class="problem-box">
+                <h3>The Manual Problem</h3>
+                <ul>
+                    <li><strong>80% of time</strong> spent on repetitive formatting</li>
+                    <li>Manual typing of fixed structures for each line</li>
+                    <li>Risk of inconsistency in separators and markers</li>
+                    <li>Average time: <strong>8-10 seconds</strong> per subtitle line</li>
+                    <li>Frequent formatting errors requiring revision</li>
+                </ul>
+            </div>
+            <div class="solution-box">
+                <h3>The Automated Solution</h3>
+                <ul>
+                    <li>Python script for file reading and transformation</li>
+                    <li>Automatic identification of timestamps and dialogues</li>
+                    <li>Automatic insertion of complete metadata structure</li>
+                    <li>Time reduced to <strong>2-3 seconds</strong> per line</li>
+                    <li><strong>100% consistent</strong> formatting standardization</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. PYTHON CODE -->
+    <section id="python-code">
+        <h2>3. Methodological Implementation: Python Script</h2>
+        <div class="code-block">
+<span class="code-keyword">def</span> <span class="code-function">format_subtitle_template</span>(input_file, output_file):
+    <span class="code-comment">"""Reads a raw subtitle file and generates a formatted template</span>
+    <span class="code-comment">with metadata structure ready for completion."""</span>
+
+    <span class="code-keyword">with</span> <span class="code-function">open</span>(input_file, <span class="code-string">'r'</span>, encoding=<span class="code-string">'utf-8'</span>) <span class="code-keyword">as</span> f:
+        lines = f.<span class="code-function">readlines</span>()
+
+    formatted_lines = []
+
+    <span class="code-keyword">for</span> line <span class="code-keyword">in</span> lines:
+        <span class="code-comment"># Detects timestamp lines</span>
+        <span class="code-keyword">if</span> <span class="code-string">'-->'</span> <span class="code-keyword">in</span> line:
+            timestamp = line.<span class="code-function">strip</span>()
+
+            <span class="code-comment"># Gets the next line (dialogue)</span>
+            next_line_index = lines.<span class="code-function">index</span>(line) + 1
+            <span class="code-keyword">if</span> next_line_index &lt; <span class="code-function">len</span>(lines):
+                dialogue = lines[next_line_index].<span class="code-function">strip</span>()
+
+                <span class="code-comment"># Creates template with empty fields</span>
+                formatted = <span class="code-function">f</span><span class="code-string">"{timestamp} {{S: || A: || L: || T: }} [sub: || action: || cap: || P] {dialogue}\n"</span>
+                formatted_lines.<span class="code-function">append</span>(formatted)
+            <span class="code-keyword">else</span>:
+                formatted_lines.<span class="code-function">append</span>(line)
+        <span class="code-keyword">else</span>:
+            <span class="code-comment"># Keeps scene numbers and empty lines</span>
+            formatted_lines.<span class="code-function">append</span>(line)
+
+    <span class="code-keyword">with</span> <span class="code-function">open</span>(output_file, <span class="code-string">'w'</span>, encoding=<span class="code-string">'utf-8'</span>) <span class="code-keyword">as</span> f:
+        f.<span class="code-function">writelines</span>(formatted_lines)
+
+<span class="code-comment"># Function usage</span>
+<span class="code-function">format_subtitle_template</span>(<span class="code-string">"raw_subtitle.srt"</span>, <span class="code-string">"formatted_subtitle.txt"</span>)
+        </div>
+        <div style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-light);">
+            <strong>Figure 1:</strong> Core Python function for automated metadata insertion in subtitle workflows.
+        </div>
+    </section>
+
+    <!-- 4. VISUAL TRANSFORMATION -->
+    <section id="visual-transformation">
+        <h2>4. Visual Transformation: Before and After</h2>
+        <div class="before-after">
+            <div class="before-box">
+                <h4>BEFORE: Raw Subtitle (SRT)</h4>
+                <pre>11
+00:00:30,823 --> 00:00:32,408
+Foram pra festa? Foi boa?
+
+12
+00:00:35,100 --> 00:00:37,500
+Sim, foi incrível!</pre>
+                <p><strong>Manual time:</strong> 8-10 sec/line · <strong>Error risk:</strong> High</p>
+            </div>
+            <div class="after-box">
+                <h4>AFTER: Formatted Template</h4>
+                <pre>11
+00:00:30,823 --> 00:00:32,408 {S: || A: || L: || T: } [sub: || action: || cap: || P] Foram pra festa? Foi boa?
+
+12
+00:00:35,100 --> 00:00:37,500 {S: || A: || L: || T: } [sub: || action: || cap: || P] Sim, foi incrível!</pre>
+                <p><strong>Automated time:</strong> 2-3 sec/line · <strong>Consistency:</strong> 100%</p>
+            </div>
+        </div>
+        <div style="font-size:0.85rem; color:var(--text-light); text-align:center;">
+            <strong>Figure 2:</strong> Comparative visualization showing raw SRT input and Python-generated formatted output.
+        </div>
+    </section>
+
+    <!-- 5. RESULTS -->
+    <section id="results">
+        <h2>5. Results and Operational Impact</h2>
+        <div class="results-grid">
+            <div class="result-card">
+                <div class="result-value">-70%</div>
+                <div class="result-label">formatting time reduction</div>
+            </div>
+            <div class="result-card">
+                <div class="result-value">100%</div>
+                <div class="result-label">metadata consistency</div>
+            </div>
+            <div class="result-card">
+                <div class="result-value">0</div>
+                <div class="result-label">formatting errors after implementation</div>
+            </div>
+            <div class="result-card">
+                <div class="result-value">+6h</div>
+                <div class="result-label">saved per 1000-subtitle project</div>
+            </div>
+        </div>
+        <h3>Additional Benefits</h3>
+        <ul>
+            <li><strong>Focus on data quality:</strong> Time freed for research on character names, actors, and tone analysis</li>
+            <li><strong>Scalability:</strong> Processing of hundreds of files with a single command</li>
+            <li><strong>Reproducibility:</strong> Same result regardless of operator</li>
+            <li><strong>Foundation for future automation:</strong> Structure ready for integration with APIs or batch processing</li>
+        </ul>
+    </section>
+
+    <!-- 6. CONNECTION TO THE ROLE -->
+    <section id="role-connection">
+        <h2>6. Connection to Data Quality Analyst Role</h2>
+        <div class="context-box">
+            <p style="margin:0; font-size:0.95rem;"><strong>Demonstrated competencies:</strong> Text processing, workflow automation, data structuring, and algorithmic problem-solving — directly applicable to data labeling, classification, and quality assurance tasks at scale.</p>
+        </div>
+        <ul>
+            <li><strong>Text Processing Fundamentals:</strong> String manipulation, parsing of domain-specific formats (SRT)</li>
+            <li><strong>Workflow Analysis &amp; Automation:</strong> Systematic identification of repetitive tasks and creation of scalable solutions</li>
+            <li><strong>Data Structuring &amp; Normalization:</strong> Transformation of unstructured textual data into consistent, field-based templates</li>
+            <li><strong>Algorithmic Problem-Solving:</strong> Application of computational thinking to real-world linguistic workflows</li>
+            <li><strong>Quality Assurance:</strong> 100% consistency and zero formatting errors after automation — directly applicable to data annotation quality control</li>
+        </ul>
+    </section>
+
+    <!-- FOOTER -->
+    <div style="text-align:center; margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--border); font-size:0.8rem; color:var(--text-light);">
+        <p>✦ Data Quality · AI Evaluation · Linguistic QA · Automation ✦</p>
+        <p style="margin-top:0.3rem;">Available for remote contract work · Open to skill assessments</p>
+    </div>
+
+</body>
+</html>

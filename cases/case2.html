@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Quality Case: Training Data Provenance · Ariane Lesnyak</title>
+    <style>
+        /* ── PALETA DE CORES DO INDEX ── */
+        :root {
+            --primary: #0f172a;
+            --primary-light: #eef2ff;
+            --accent: #2563eb;
+            --accent-light: #60a5fa;
+            --border: #e9edf2;
+            --border-light: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #475569;
+            --bg-light: #f8fafc;
+            --gray-dark: #4a5568;
+            --gray-medium: #718096;
+            --gray-light: #edf2f7;
+            --danger: #c53030;
+            --warning: #d69e2e;
+            --success: #2f855a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg-light);
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            font-size: 10.5pt;
+        }
+
+        /* ── CASE HEADER ── */
+        .case-header {
+            text-align: center;
+            border-bottom: 3px solid var(--accent);
+            padding: 2rem 1.5rem;
+            margin-bottom: 2rem;
+            background: var(--card);
+            border-radius: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+        }
+
+        .case-number {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            background: var(--primary-light);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+
+        .case-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.25rem;
+        }
+
+        .case-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .case-tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .case-tag {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* ── SECTIONS ── */
+        section {
+            margin-bottom: 2.5rem;
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 1.25rem;
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.3px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 1.25rem 0 0.75rem 0;
+            border-left: 4px solid var(--accent);
+            padding-left: 0.75rem;
+        }
+
+        /* ── CARDS / BOXES ── */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .problem-box, .solution-box {
+            background: var(--bg-light);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+        }
+
+        .problem-box h3, .solution-box h3 {
+            text-align: center;
+            border: none;
+            padding-left: 0;
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .problem-box ul, .solution-box ul {
+            list-style: none;
+            padding: 0;
+            font-size: 0.9rem;
+        }
+
+        .problem-box li, .solution-box li {
+            padding-left: 1.2rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .problem-box li::before, .solution-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .research-statement {
+            background: var(--primary-light);
+            padding: 1.25rem;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 0.75rem 0.75rem 0;
+            font-style: italic;
+            margin-bottom: 1.25rem;
+            color: var(--text-light);
+        }
+
+        /* ── IMAGE CONTAINER ── */
+        .image-container {
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+            background: var(--bg-light);
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .image-caption {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* ── PIPELINE (interativo) ── */
+        .pipeline-wrapper {
+            position: relative;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem 3rem;
+            margin: 1.25rem 0;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pipeline-container {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            transition: transform 0.6s ease;
+        }
+
+        .pipeline-box {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card);
+            border: 2px solid var(--accent);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            position: absolute;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.4s ease;
+        }
+
+        .pipeline-box.active {
+            opacity: 1;
+            transform: translateX(0);
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 3;
+        }
+
+        .arrow-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(37, 99, 235, 0.15);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+
+        .arrow-btn:hover {
+            background: rgba(37, 99, 235, 0.3);
+        }
+
+        .arrow-btn:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+
+        .arrow-btn.prev { left: 10px; }
+        .arrow-btn.next { right: 10px; }
+
+        /* ── TABS (Cases) ── */
+        .interactive-rewrite {
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            overflow: hidden;
+            margin: 1.25rem 0;
+            background: var(--card);
+        }
+
+        .tab-nav {
+            display: flex;
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem 0.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: 0.3s;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-right: 1px solid var(--border);
+        }
+
+        .tab-btn:last-child {
+            border-right: none;
+        }
+
+        .tab-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1.5rem;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ── LAYOUT DOS CASOS ── */
+        .case-content-full {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .case-header-box {
+            grid-column: 1 / -1;
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-align: justify;
+        }
+
+        .ai-hallucination-full, .digital-forensics-full {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+
+        .ai-hallucination-full {
+            border-top: 3px solid var(--gray-medium);
+        }
+
+        .digital-forensics-full {
+            border-top: 3px solid var(--gray-dark);
+        }
+
+        .analysis-box {
+            grid-column: 1 / -1;
+            background: var(--primary-light);
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            border-left: 4px solid var(--accent);
+            margin-top: 1rem;
+        }
+
+        .analysis-box h4 {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .analysis-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .analysis-list li {
+            margin-bottom: 0.75rem;
+            padding-left: 1.2rem;
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        .analysis-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* ── COLLAPSIBLE ── */
+        .collapsible-section {
+            margin-top: 1.25rem;
+            border-top: 1px dashed var(--border);
+            padding-top: 1rem;
+        }
+
+        .collapsible-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            text-align: left;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .collapsible-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .collapsible-btn::after {
+            content: '▼';
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible-btn.active::after {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+
+        .collapsible-content-inner {
+            padding: 1.25rem;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 0.5rem 0.5rem;
+        }
+
+        /* ── TABELA ── */
+        .methodology-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        .methodology-table th {
+            background: var(--primary);
+            color: white;
+            padding: 0.6rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .methodology-table td {
+            padding: 0.6rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .methodology-table tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+
+        /* ── TOOLTIP ── */
+        .tech-term {
+            background: var(--primary-light);
+            color: var(--accent);
+            padding: 0.05rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: help;
+            position: relative;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .tech-term:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .tech-term::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-40%);
+            background: rgba(15, 23, 42, 0.95);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.3rem;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 100;
+            margin-bottom: 0.3rem;
+            pointer-events: none;
+            font-weight: 400;
+        }
+
+        .tech-term:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ── CLICK HINT ── */
+        .click-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .hand-icon {
+            width: 18px;
+            height: 18px;
+            fill: var(--accent);
+        }
+
+        /* ── RESPONSIVO ── */
+        @media (max-width: 768px) {
+            .two-columns, .case-content-full {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .case-header h1 {
+                font-size: 1.4rem;
+            }
+            .pipeline-wrapper {
+                padding: 1rem 1.5rem;
+            }
+            .tab-btn {
+                font-size: 0.55rem;
+                padding: 0.5rem 0.25rem;
+            }
+            .tab-content {
+                padding: 1rem;
+            }
+        }
+
+        @media print {
+            body { padding: 0.5rem; }
+            .pipeline-box { position: relative; opacity: 1; transform: none; display: block; }
+            .pipeline-container { flex-direction: column; gap: 1rem; }
+            .tab-btn { display: none; }
+            .arrow-btn { display: none; }
+            .collapsible-content { max-height: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CASE HEADER -->
+    <div class="case-header">
+        <div class="case-number">Data Quality Case Study</div>
+        <h1>Training Data Provenance Through Output Analysis</h1>
+        <div class="case-subtitle">Detecting patterns and source artifacts in AI-generated content at scale</div>
+        <div class="case-tags">
+            <span class="case-tag">Data Provenance</span>
+            <span class="case-tag">Pattern Analysis</span>
+            <span class="case-tag">Digital Forensics</span>
+            <span class="case-tag">Dataset Curation</span>
+            <span class="case-tag">AI Evaluation</span>
+        </div>
+    </div>
+
+    <!-- PROBLEM / SOLUTION -->
+    <section id="summary">
+        <h2>Problem · Solution · Impact</h2>
+
+        <div class="two-columns">
+            <div class="problem-box">
+                <h3>📌 Problem</h3>
+                <ul>
+                    <li>AI-generated subtitles showed <strong>systematic patterns</strong> (hallucinations) that engineers dismissed as random errors.</li>
+                    <li>These patterns actually <strong>revealed undocumented sources</strong> in training datasets (volunteer content, platform-specific artifacts, unauthorized material).</li>
+                    <li>No systematic methodology existed to <strong>classify or trace</strong> these data provenance artifacts.</li>
+                </ul>
+            </div>
+
+            <div class="solution-box">
+                <h3>✅ Solution</h3>
+                <ul>
+                    <li>Developed a <strong>replicable 5-stage provenance audit framework</strong> for tracing training data sources through output analysis.</li>
+                    <li>Created an <strong>artifact typology</strong> with 4 categories: volunteer-sourced data, cross-platform replication, unauthorized content, recursive training effects.</li>
+                    <li>Applied <strong>digital forensics techniques</strong> (archival research, pattern recognition, source matching) to 3 paradigmatic cases.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="research-statement" style="margin-top:1rem;">
+            <strong>Impact:</strong> Developed a scalable methodology for detecting and classifying data provenance artifacts in AI outputs — directly applicable to AI content evaluation, dataset curation, and quality assurance workflows.
+        </div>
+
+        <div class="image-container" style="margin-top:1.25rem;">
+            <strong style="display:block; margin-bottom:0.5rem; color:var(--primary);">EMPIRICAL EVIDENCE: HALLUCINATION AS PROVENANCE TRACE</strong>
+            <img src="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%202%20-%20ethical%20hallucinations%20in%20LLM%20outputs/images/case-2-hallucinated-output.png?raw=true" alt="Hallucination example" style="max-width:100%;">
+            <div class="image-caption"><strong>Figure 1</strong>: AI-generated output with no acoustic or contextual alignment to source media — a forensic artifact pointing to specific training data origins.</div>
+        </div>
+    </section>
+
+    <!-- CONTEXT: ARTIFACT DETECTION -->
+    <section id="context">
+        <h2>Context: Artifact Detection at Scale</h2>
+
+        <div class="two-columns">
+            <div class="problem-box">
+                <h3>The Empirical Challenge</h3>
+                <ul>
+                    <li><span class="highlight">Data Source:</span> AI-generated subtitles from major streaming platforms (2021-2023)</li>
+                    <li><span class="highlight">Scale:</span> Industrial deployment affecting millions of users daily</li>
+                    <li><span class="highlight">Pattern:</span> Systematic appearance of content with identifiable source characteristics</li>
+                    <li><span class="highlight">Research Gap:</span> Limited methodologies for artifact data provenance analysis</li>
+                </ul>
+            </div>
+
+            <div class="solution-box">
+                <h3>Methodological Approach</h3>
+                <ul>
+                    <li><span class="highlight">Digital Forensics:</span> Tracing text patterns to probable training data origins</li>
+                    <li><span class="highlight">Artifact Classification:</span> Developing taxonomies for output-source relationships</li>
+                    <li><span class="highlight">Provenance Framework:</span> Creating protocols for detecting connections between model outputs and training data</li>
+                    <li><span class="highlight">Cross-Disciplinary Analysis:</span> Integrating data science, archival research, and linguistic analysis</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- METHODOLOGICAL PIPELINE -->
+    <section id="pipeline">
+        <h2>Methodological Pipeline: Provenance Audit Framework</h2>
+
+        <div class="research-statement">
+            <strong>Methodological Contribution:</strong> A replicable 5-stage framework for investigating training data provenance through output analysis — directly applicable to AI content evaluation and dataset curation workflows.
+        </div>
+
+        <div class="click-hint">
+            <svg class="hand-icon" viewBox="0 0 24 24"><path d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/></svg>
+            Interactive workflow — click the arrows to navigate the 5 stages
+        </div>
+
+        <div class="pipeline-wrapper">
+            <button class="arrow-btn prev" onclick="moveMethodSlide(-1)" id="methodPrevBtn" disabled>❮</button>
+            <div class="pipeline-container" id="methodPipeline">
+                <div class="pipeline-box active" id="methodStep1">
+                    <div class="step-number">1</div>
+                    <strong>Output Analysis & Pattern Recognition</strong>
+                    <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-light);">Identify suspicious patterns suggesting specific training data sources</p>
+                    <p style="font-size:0.8rem; margin-top:0.25rem; color:var(--text-light);"><strong>Methodological Criterion:</strong> Recognition of attribution patterns and cultural artifacts as provenance markers</p>
+                </div>
+                <div class="pipeline-box" id="methodStep2">
+                    <div class="step-number">2</div>
+                    <strong>Source Investigation & Digital Forensics</strong>
+                    <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-light);">Trace AI outputs back to probable training data sources</p>
+                    <p style="font-size:0.8rem; margin-top:0.25rem; color:var(--text-light);"><strong>Methodological Criterion:</strong> Application of archival and forensic techniques to data provenance research</p>
+                </div>
+                <div class="pipeline-box" id="methodStep3">
+                    <div class="step-number">3</div>
+                    <strong>Artifact Classification & Typology</strong>
+                    <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-light);">Categorize output-source relationships by type and evidential strength</p>
+                    <p style="font-size:0.8rem; margin-top:0.25rem; color:var(--text-light);"><strong>Methodological Criterion:</strong> Systematic classification of provenance evidence and artifact types</p>
+                </div>
+                <div class="pipeline-box" id="methodStep4">
+                    <div class="step-number">4</div>
+                    <strong>Impact Assessment & Dataset Implications</strong>
+                    <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-light);">Evaluate implications for dataset composition and curation practices</p>
+                    <p style="font-size:0.8rem; margin-top:0.25rem; color:var(--text-light);"><strong>Methodological Criterion:</strong> Analysis of training data construction practices through output evidence</p>
+                </div>
+                <div class="pipeline-box" id="methodStep5">
+                    <div class="step-number">5</div>
+                    <strong>Methodological Refinement</strong>
+                    <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-light);">Develop improved methodologies and identify future research directions</p>
+                    <p style="font-size:0.8rem; margin-top:0.25rem; color:var(--text-light);"><strong>Methodological Criterion:</strong> Iterative refinement of provenance analysis techniques</p>
+                </div>
+            </div>
+            <button class="arrow-btn next" onclick="moveMethodSlide(1)" id="methodNextBtn">❯</button>
+        </div>
+
+        <h3>Artifact Typology: Classification Framework</h3>
+        <div class="research-statement">
+            <strong>Methodological Clarification:</strong> Different artifact types require different investigative methodologies and have different implications for understanding training data composition.
+        </div>
+
+        <table class="methodology-table">
+            <thead><tr><th>Artifact Category</th><th>Detection Method</th><th>Dataset Implication</th></tr></thead>
+            <tbody>
+                <tr><td><span class="highlight">Volunteer-Sourced Data Traces</span></td><td>Attribution pattern recognition, platform analysis</td><td>Inclusion of volunteer-created content in commercial training sets</td></tr>
+                <tr><td><span class="highlight">Cross-Platform Pattern Replication</span></td><td>Contextual analysis, cultural artifact identification</td><td>Cross-domain cultural pattern transfer without functional adaptation</td></tr>
+                <tr><td><span class="highlight">Unauthorized Content Inclusion</span></td><td>Source matching, copyright database checking</td><td>Use of protected content without documented permission</td></tr>
+                <tr><td><span class="highlight">Recursive Training Effects</span></td><td>Industry analysis, labor displacement assessment</td><td>Training on human outputs that systems may displace</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- PARADIGMATIC CASES -->
+    <section id="cases">
+        <h2>Paradigmatic Cases: Methodological Application</h2>
+
+        <div class="click-hint">
+            <svg class="hand-icon" viewBox="0 0 24 24"><path d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/></svg>
+            Interactive analysis of 3 cases demonstrating distinct artifact patterns
+        </div>
+
+        <div class="interactive-rewrite">
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="openTab(event, 'case1')">Case 1: Volunteer-Sourced Data Traces</button>
+                <button class="tab-btn" onclick="openTab(event, 'case2')">Case 2: Cross-Platform Pattern Replication</button>
+                <button class="tab-btn" onclick="openTab(event, 'case3')">Case 3: Unauthorized Content Inclusion</button>
+            </div>
+
+            <!-- CASE 1: Amara.org -->
+            <div id="case1" class="tab-content active">
+                <div class="case-content-full">
+                    <div class="case-header-box">
+                        <span class="highlight">Context:</span> Amara (formerly Universal Subtitles) is a volunteer subtitling platform. AI outputs reproduce its platform-specific attribution patterns — evidence of volunteer-sourced data in commercial training sets.
+                    </div>
+                    <div class="ai-hallucination-full">
+                        <h4 style="font-size:0.9rem; color:var(--gray-dark); text-align:center; margin-bottom:0.5rem;">OUTPUT ARTIFACT</h4>
+                        <img src="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%202%20-%20ethical%20hallucinations%20in%20LLM%20outputs/images/case-2-LLM-hallucination-1.png?raw=true" style="width:100%; height:auto;">
+                        <div class="image-caption"><strong>Figure 2</strong>: Preserved platform attribution pattern in AI output</div>
+                    </div>
+                    <div class="digital-forensics-full">
+                        <h4 style="font-size:0.9rem; color:var(--gray-dark); text-align:center; margin-bottom:0.5rem;">SOURCE ANALYSIS</h4>
+                        <div style="font-size:0.85rem;">
+                            <span class="highlight">Amara.org Platform Characteristics:</span><br>
+                            • Founded 2010 (as Universal Subtitles)<br>
+                            • Model: Volunteer-based collaborative subtitling<br>
+                            • Content: Open educational resources<br>
+                            • License: Creative Commons for user content<br>
+                            • <span class="highlight">Research Finding:</span> Output patterns suggest inclusion of volunteer-sourced data in commercial training sets
+                            <p style="margin-top:0.75rem;"><span class="highlight">Methodological Insight:</span> Attribution patterns in AI outputs can serve as provenance markers, enabling reconstruction of training data composition.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="analysis-box">
+                    <h4>Methodological Insights</h4>
+                    <ul class="analysis-list">
+                        <li><span class="tech-term" data-tooltip="Commercial use of volunteer work without attribution or compensation">Volunteer-Sourced Data Detection:</span> Training commercial AI on volunteer-created content creates identifiable output patterns that enable source tracing.</li>
+                        <li><span class="tech-term" data-tooltip="Attribution as forensic marker for dataset composition">Attribution as Provenance Evidence:</span> Preserved attribution patterns provide direct evidence of training data sources.</li>
+                        <li><span class="tech-term" data-tooltip="Threat to volunteer platform sustainability">Dataset Sustainability Implications:</span> Inclusion of volunteer content without compensation raises questions about sustainable data ecosystems.</li>
+                    </ul>
+                </div>
+
+                <!-- COLLAPSIBLE: FANSUBS -->
+                <div class="collapsible-section">
+                    <button class="collapsible-btn" onclick="toggleCollapsible('fansubs')">Extended: The Fansubs Ecosystem & Cascading Provenance</button>
+                    <div class="collapsible-content" id="fansubs">
+                        <div class="collapsible-content-inner">
+                            <h4 style="color: var(--accent); margin-bottom:0.75rem;">Complex Provenance in Volunteer Localization Networks</h4>
+                            <div class="two-columns" style="margin:0.75rem 0;">
+                                <div>
+                                    <h5 style="font-size:0.85rem; color:var(--text-light); margin-bottom:0.5rem;">The Provenance Chain</h5>
+                                    <ul style="font-size:0.85rem; list-style:none; padding-left:0;">
+                                        <li style="padding-left:1.2rem; position:relative; margin-bottom:0.3rem;"><span style="position:absolute; left:0; color:var(--accent);">•</span> Source: Informal distribution channels</li>
+                                        <li style="padding-left:1.2rem; position:relative; margin-bottom:0.3rem;"><span style="position:absolute; left:0; color:var(--accent);">•</span> Labor: Volunteer fansubbers</li>
+                                        <li style="padding-left:1.2rem; position:relative; margin-bottom:0.3rem;"><span style="position:absolute; left:0; color:var(--accent);">•</span> Distribution: Fan community platforms</li>
+                                        <li style="padding-left:1.2rem; position:relative; margin-bottom:0.3rem;"><span style="position:absolute; left:0; color:var(--accent);">•</span> Data Harvesting: Web-crawled training datasets</li>
+                                        <li style="padding-left:1.2rem; position:relative; margin-bottom:0.3rem;"><span style="position:absolute; left:0; color:var(--accent);">•</span> Commercial Output: Paid streaming platforms</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 style="font-size:0.85rem; color:var(--text-light); margin-bottom:0.5rem;">Methodological Challenges</h5>
+                                    <ul style="font-size:0.85rem; list-style:none; padding-left:0;">
+                                        <li style="padding-left:1.2rem; position:relative; margin-bottom:0.3rem;"><span style="position:absolute; left:0; color:var(--accent);">•</span> Cascading provenance (multiple unattributed layers)</li>
+                                        <li style="padding-left:1.2rem; position:relative; margin-bottom:0.3rem;"><span style="position:absolute; left:0; color:var(--accent);">•</span> Labor obfuscation (detached from original context)</li>
+                                        <li style="padding-left:1.2rem; position:relative; margin-bottom:0.3rem;"><span style="position:absolute; left:0; color:var(--accent);">•</span> Licensing ambiguity (complex copyright status)</li>
+                                        <li style="padding-left:1.2rem; position:relative; margin-bottom:0.3rem;"><span style="position:absolute; left:0; color:var(--accent);">•</span> Attribution loss (systematic removal of credits)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div style="background:var(--primary-light); padding:0.75rem; border-radius:0.5rem; border-left:3px solid var(--accent);">
+                                <p style="font-size:0.85rem; margin:0;"><strong>Research Implications:</strong> The fansubs ecosystem demonstrates <strong>cascading data provenance</strong> — content passing through multiple informal distribution and labor layers before entering commercial training pipelines — requiring sophisticated multi-layered forensic reconstruction techniques.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CASE 2: YouTube Culture -->
+            <div id="case2" class="tab-content">
+                <div class="case-content-full">
+                    <div class="case-header-box">
+                        <span class="highlight">Context:</span> "Subscribe to the channel and hit the bell" is a YouTube-specific cultural artifact. AI systems replicate this pattern in inappropriate contexts — demonstrating decontextualized transfer of platform-specific patterns.
+                    </div>
+                    <div class="ai-hallucination-full">
+                        <h4 style="font-size:0.9rem; color:var(--gray-dark); text-align:center; margin-bottom:0.5rem;">OUTPUT ARTIFACT</h4>
+                        <img src="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%202%20-%20ethical%20hallucinations%20in%20LLM%20outputs/images/case-2-LLM-hallucination-2.png?raw=true" style="width:100%; height:auto;">
+                        <div class="image-caption"><strong>Figure 3</strong>: Cross-platform pattern replication without functional adaptation</div>
+                    </div>
+                    <div class="digital-forensics-full">
+                        <h4 style="font-size:0.9rem; color:var(--gray-dark); text-align:center; margin-bottom:0.5rem;">CULTURAL CONTEXT ANALYSIS</h4>
+                        <div style="font-size:0.85rem;">
+                            <span class="highlight">YouTube Cultural Artifacts Analysis:</span><br>
+                            • Pattern: "Subscribe + bell notification" call-to-action<br>
+                            • Function: Platform-specific engagement mechanism<br>
+                            • Original Context: Creator-viewer relationship on ad-supported platform<br>
+                            • Transfer Issue: Decontextualized replication in subscription services<br>
+                            <p style="margin-top:0.75rem;"><span class="highlight">Research Finding:</span> AI systems reproduce cultural artifacts without understanding their functional context — demonstrating limitations in cultural adaptation and revealing specific training data sources.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="analysis-box">
+                    <h4>Methodological Insights</h4>
+                    <ul class="analysis-list">
+                        <li><span class="tech-term" data-tooltip="Removing cultural elements from their original context">Cross-Domain Pattern Transfer:</span> Replicating platform-specific patterns without functional understanding demonstrates dataset contamination and limited cultural adaptation.</li>
+                        <li><span class="tech-term" data-tooltip="Detection of unvetted data in training sets">Training Data Contamination Detection:</span> Evidence of YouTube patterns in streaming services reveals inadequate data curation and filtering.</li>
+                        <li><span class="tech-term" data-tooltip="Using platform signatures as forensic markers">Platform Signature Analysis:</span> Cross-platform pattern replication enables identification of specific training data sources.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CASE 3: Intervoices -->
+            <div id="case3" class="tab-content">
+                <div class="case-content-full">
+                    <div class="case-header-box">
+                        <span class="highlight">Context:</span> Intervoices was a Brazilian translation agency (2010-2022). Analysis indicates AI systems incorporated its professional content — demonstrating unauthorized inclusion of copyrighted material.
+                    </div>
+                    <div class="ai-hallucination-full">
+                        <h4 style="font-size:0.9rem; color:var(--gray-dark); text-align:center; margin-bottom:0.5rem;">OUTPUT ARTIFACT</h4>
+                        <img src="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%202%20-%20ethical%20hallucinations%20in%20LLM%20outputs/images/case-2-LLM-hallucination-3.png?raw=true" style="width:100%; height:auto;">
+                        <div class="image-caption"><strong>Figure 4</strong>: Unauthorized inclusion of professional content in outputs</div>
+                    </div>
+                    <div class="digital-forensics-full">
+                        <h4 style="font-size:0.9rem; color:var(--gray-dark); text-align:center; margin-bottom:0.5rem;">DIGITAL FORENSICS</h4>
+                        <div style="font-size:0.85rem;">
+                            <a href="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%202%20-%20ethical%20hallucinations%20in%20LLM%20outputs/images/case-2-figure-3e-professional-translation-agency-website.png?raw=true" target="_blank"><img src="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%202%20-%20ethical%20hallucinations%20in%20LLM%20outputs/images/case-2-figure-3e-professional-translation-agency-website.png?raw=true" style="width:100%; height:auto; margin-bottom:0.5rem;"></a>
+                            <div class="image-caption"><strong>Figure 5</strong>: Web archive documentation of source timeline</div>
+                            <br>
+                            <a href="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%202%20-%20ethical%20hallucinations%20in%20LLM%20outputs/images/case-2-figure-3d-professional-translation-agency-website.png?raw=true" target="_blank"><img src="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%202%20-%20ethical%20hallucinations%20in%20LLM%20outputs/images/case-2-figure-3d-professional-translation-agency-website.png?raw=true" style="width:100%; height:auto; margin-bottom:0.5rem;"></a>
+                            <div class="image-caption"><strong>Figure 6</strong>: Professional translation agency source material</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="analysis-box">
+                    <h4>Methodological Insights</h4>
+                    <ul class="analysis-list">
+                        <li><span class="tech-term" data-tooltip="Identifying unauthorized use of protected creative works">Unauthorized Content Detection:</span> Professional agency content incorporated into training data creates identifiable output patterns enabling source tracing.</li>
+                        <li><span class="tech-term" data-tooltip="AI consuming the work of those it displaces">Recursive Training Analysis:</span> Systems trained on human translation outputs create complex relationships between training sources and potential displacement effects.</li>
+                        <li><span class="tech-term" data-tooltip="Applying archival research to AI ethics">Archival Forensic Methodology:</span> Internet Archive analysis combined with content matching provides robust digital forensics for provenance reconstruction.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- METHODOLOGICAL FRAMEWORK -->
+    <section id="methodological-framework">
+        <h2>Methodological Framework: Analysis as Research Practice</h2>
+
+        <div class="research-statement">
+            <strong>Methodological Innovation:</strong> Analytical criteria were embedded at each investigation stage, transforming output analysis from observational reporting to systematic research practice — ensuring evidential validity and research reproducibility.
+        </div>
+
+        <div class="two-columns">
+            <div class="problem-box">
+                <h3>Inclusion as Analytical Criterion</h3>
+                <p style="text-align:justify;">All legitimate linguistic variants and cultural artifacts treated as valid data points, rejecting simplistic "correct" vs. "incorrect" distinctions.</p>
+                <div style="font-size:0.8rem; margin-top:0.5rem;"><span class="highlight">Technical Implementation:</span> Comprehensive source documentation and pattern recognition protocols</div>
+            </div>
+            <div class="solution-box">
+                <h3>Transparency in Classification</h3>
+                <p style="text-align:justify;">Artifact classifications included explicit rationale documentation, making analytical decisions and their evidential basis visible and contestable.</p>
+                <div style="font-size:0.8rem; margin-top:0.5rem;"><span class="highlight">Technical Implementation:</span> Governance metadata attached to all classification decisions</div>
+            </div>
+            <div class="problem-box">
+                <h3>Contextual Analytical Framework</h3>
+                <p style="text-align:justify;">Each artifact analyzed within its specific cultural, economic, and platform context, avoiding universalist assumptions about pattern significance.</p>
+                <div style="font-size:0.8rem; margin-top:0.5rem;"><span class="highlight">Technical Implementation:</span> Contextual annotation layers in analysis database</div>
+            </div>
+            <div class="solution-box">
+                <h3>Reproducibility Protocol Design</h3>
+                <p style="text-align:justify;">Methodologies designed for replication, with clear documentation of analytical steps, decision criteria, and evidence evaluation processes.</p>
+                <div style="font-size:0.8rem; margin-top:0.5rem;"><span class="highlight">Technical Implementation:</span> Step-by-step analytical protocols with evidence chains</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="results">
+        <h2>Measurable Results & Methodological Contributions</h2>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:1rem; margin-top:1rem;">
+            <div style="background:var(--bg-light); padding:1rem; border-radius:0.75rem; border:1px solid var(--border); text-align:center;">
+                <div style="font-size:2rem; font-weight:700; color:var(--accent);">5-stage</div>
+                <div style="font-size:0.85rem; color:var(--text-light);">provenance audit framework</div>
+            </div>
+            <div style="background:var(--bg-light); padding:1rem; border-radius:0.75rem; border:1px solid var(--border); text-align:center;">
+                <div style="font-size:2rem; font-weight:700; color:var(--accent);">4</div>
+                <div style="font-size:0.85rem; color:var(--text-light);">artifact categories established</div>
+            </div>
+            <div style="background:var(--bg-light); padding:1rem; border-radius:0.75rem; border:1px solid var(--border); text-align:center;">
+                <div style="font-size:2rem; font-weight:700; color:var(--accent);">3</div>
+                <div style="font-size:0.85rem; color:var(--text-light);">paradigmatic cases documented</div>
+            </div>
+            <div style="background:var(--bg-light); padding:1rem; border-radius:0.75rem; border:1px solid var(--border); text-align:center;">
+                <div style="font-size:2rem; font-weight:700; color:var(--accent);">100%</div>
+                <div style="font-size:0.85rem; color:var(--text-light);">reproducible detection patterns</div>
+            </div>
+        </div>
+
+        <div class="research-statement" style="margin-top:1.5rem;">
+            <strong>Methodological Contribution:</strong> A scalable, replicable framework for detecting and classifying data provenance artifacts in AI outputs — directly applicable to AI content evaluation, dataset curation, and quality assurance workflows. Provides actionable insights for AI developers, dataset curators, and compliance teams.
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <div style="text-align:center; margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--border); font-size:0.8rem; color:var(--text-light);">
+        <p>✦ Data Quality · AI Evaluation · Linguistic QA · RLHF Annotation ✦</p>
+        <p style="margin-top:0.3rem;">Available for remote contract work · Open to skill assessments</p>
+    </div>
+
+    <script>
+        // ── TABS ──
+        function openTab(evt, tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => { t.classList.remove('active'); t.style.display = 'none'; });
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            document.getElementById(tabName).style.display = 'block';
+            if (evt && evt.currentTarget) evt.currentTarget.classList.add('active');
+        }
+
+        // ── PIPELINE ──
+        let currentMethodStep = 1;
+        const totalMethodSteps = 5;
+
+        function updateMethodPipeline() {
+            document.querySelectorAll('.pipeline-box').forEach((box, index) => {
+                box.classList.toggle('active', index + 1 === currentMethodStep);
+            });
+            document.getElementById('methodPrevBtn').disabled = currentMethodStep === 1;
+            document.getElementById('methodNextBtn').disabled = currentMethodStep === totalMethodSteps;
+        }
+
+        function moveMethodSlide(direction) {
+            const newStep = currentMethodStep + direction;
+            if (newStep >= 1 && newStep <= totalMethodSteps) {
+                currentMethodStep = newStep;
+                updateMethodPipeline();
+            }
+        }
+
+        // ── COLLAPSIBLE ──
+        function toggleCollapsible(sectionId) {
+            const button = event.currentTarget;
+            const content = document.getElementById(sectionId);
+            button.classList.toggle('active');
+            if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                content.style.maxHeight = '0px';
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
+        }
+
+        // ── INIT ──
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMethodPipeline();
+            document.querySelectorAll('.collapsible-content').forEach(c => c.style.maxHeight = '0px');
+            document.querySelectorAll('.tab-content').forEach((t, i) => {
+                t.style.display = i === 0 ? 'block' : 'none';
+                if (i === 0) t.classList.add('active');
+            });
+        });
+    </script>
+
+</body>
+</html>
