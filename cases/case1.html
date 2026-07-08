@@ -1,1 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Quality Case: Taxonomy Development · Ariane Lesnyak</title>
+    <style>
+        /* ── PALETA DE CORES DO INDEX (aprovada) ── */
+        :root {
+            --primary: #0f172a;
+            --primary-light: #eef2ff;
+            --accent: #2563eb;
+            --accent-light: #60a5fa;
+            --border: #e9edf2;
+            --border-light: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #475569;
+            --bg-light: #f8fafc;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg-light);
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            font-size: 10.5pt;
+        }
+
+        /* ── CASE HEADER ── */
+        .case-header {
+            text-align: center;
+            border-bottom: 3px solid var(--accent);
+            padding: 2rem 1.5rem;
+            margin-bottom: 2rem;
+            background: var(--card);
+            border-radius: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+        }
+
+        .case-number {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            background: var(--primary-light);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+
+        .case-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.25rem;
+        }
+
+        .case-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .case-tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .case-tag {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* ── SECTIONS ── */
+        section {
+            margin-bottom: 2.5rem;
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 1.25rem;
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.3px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 1.25rem 0 0.75rem 0;
+            border-left: 4px solid var(--accent);
+            padding-left: 0.75rem;
+        }
+
+        /* ── CARDS / BOXES ── */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .problem-box, .solution-box {
+            background: var(--bg-light);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+        }
+
+        .problem-box h3, .solution-box h3 {
+            text-align: center;
+            border: none;
+            padding-left: 0;
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .problem-box ul, .solution-box ul {
+            list-style: none;
+            padding: 0;
+            font-size: 0.9rem;
+        }
+
+        .problem-box li, .solution-box li {
+            padding-left: 1.2rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .problem-box li::before, .solution-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .research-statement {
+            background: var(--primary-light);
+            padding: 1.25rem;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 0.75rem 0.75rem 0;
+            font-style: italic;
+            margin-bottom: 1.25rem;
+            color: var(--text-light);
+        }
+
+        /* ── IMAGE CONTAINER ── */
+        .image-container {
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+            background: var(--bg-light);
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .image-caption {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* ── PIPELINE (interativo) ── */
+        .pipeline-wrapper {
+            position: relative;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem 3rem;
+            margin: 1.25rem 0;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pipeline-container {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            transition: transform 0.6s ease;
+        }
+
+        .pipeline-box {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card);
+            border: 2px solid var(--accent);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            position: absolute;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.4s ease;
+        }
+
+        .pipeline-box.active {
+            opacity: 1;
+            transform: translateX(0);
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 3;
+        }
+
+        .arrow-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(37, 99, 235, 0.15);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+
+        .arrow-btn:hover {
+            background: rgba(37, 99, 235, 0.3);
+        }
+
+        .arrow-btn:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+
+        .arrow-btn.prev { left: 10px; }
+        .arrow-btn.next { right: 10px; }
+
+        /* ── TABs (fases) ── */
+        .phase-tabs {
+            display: flex;
+            margin-bottom: 0;
+            background: var(--bg-light);
+            border-radius: 0.75rem 0.75rem 0 0;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-bottom: none;
+        }
+
+        .phase-tab {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .phase-tab.active {
+            color: white;
+            background: var(--accent);
+        }
+
+        .phase-content {
+            display: none;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0 0 0.75rem 0.75rem;
+            background: var(--card);
+            margin-bottom: 1.25rem;
+        }
+
+        .phase-content.active {
+            display: block;
+        }
+
+        /* ── ANALYSIS BOX ── */
+        .analysis-box {
+            background: var(--primary-light);
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            border-left: 4px solid var(--accent);
+            margin-top: 1rem;
+        }
+
+        .analysis-box h4 {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .analysis-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .analysis-list li {
+            margin-bottom: 0.75rem;
+            padding-left: 1.2rem;
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        .analysis-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .critical-finding {
+            background: #fef2f2;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+            border-left: 4px solid #ef4444;
+        }
+
+        .critical-finding strong {
+            color: #dc2626;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .click-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .hand-icon {
+            width: 18px;
+            height: 18px;
+            fill: var(--accent);
+        }
+
+        /* ── TABLE ── */
+        .methodology-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+
+        .methodology-table th {
+            background: var(--primary);
+            color: white;
+            padding: 0.6rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .methodology-table td {
+            padding: 0.6rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .methodology-table tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+
+        /* ── CARDS GRID ── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .process-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .process-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .process-card h4 {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .process-card p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* ── RESPONSIVO ── */
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .case-header h1 {
+                font-size: 1.4rem;
+            }
+
+            .pipeline-wrapper {
+                padding: 1rem 1.5rem;
+            }
+
+            .phase-tab {
+                font-size: 0.6rem;
+                padding: 0.5rem;
+            }
+        }
+
+        @media print {
+            body { padding: 0.5rem; }
+            .phase-tab { display: none; }
+            .arrow-btn { display: none; }
+            .pipeline-box { position: relative; opacity: 1; transform: none; display: block; }
+            .pipeline-container { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CASE HEADER -->
+    <div class="case-header">
+        <div class="case-number">Data Quality Case Study</div>
+        <h1>From Speech Analytics to Corporate Taxonomy</h1>
+        <div class="case-subtitle">Structuring 2,700+ terms to enable consistent text classification, labeling, and retrieval</div>
+        <div class="case-tags">
+            <span class="case-tag">Data Classification</span>
+            <span class="case-tag">Taxonomy Design</span>
+            <span class="case-tag">ISO 25964</span>
+            <span class="case-tag">Information Retrieval</span>
+            <span class="case-tag">Data Labeling</span>
+        </div>
+    </div>
+
+    <!-- PROBLEM / SOLUTION (direto ao ponto) -->
+    <section id="summary">
+        <h2>Problem · Solution · Impact</h2>
+
+        <div class="two-columns">
+            <div class="problem-box">
+                <h3>📌 Problem</h3>
+                <ul>
+                    <li>A telecom client had <strong>41 different ways</strong> to express "data allowance" in customer-agent interactions.</li>
+                    <li>This caused <strong>67% of agent searches</strong> to return zero results, increasing handling time and customer frustration.</li>
+                    <li>No consistent taxonomy existed to classify, label, or retrieve content across systems.</li>
+                </ul>
+            </div>
+
+            <div class="solution-box">
+                <h3>✅ Solution</h3>
+                <ul>
+                    <li>Analyzed <strong>2M+ monthly interactions</strong> to identify semantic gaps and linguistic variation.</li>
+                    <li>Created a <strong>controlled vocabulary</strong> with hierarchical, associative, and equivalence relations.</li>
+                    <li>Expanded it into a <strong>2,700-term enterprise taxonomy</strong> following ISO 25964 standards.</li>
+                    <li>Implemented governance structures for ongoing data quality and consistency.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="research-statement" style="margin-top:1rem;">
+            <strong>Impact:</strong> 67% fewer failed searches · 18% faster resolution · 30,000+ agents supported · Taxonomy adopted as standard for content classification and retrieval across the organization.
+        </div>
+    </section>
+
+    <!-- CONTEXT: REAL DATA -->
+    <section id="context">
+        <h2>Context: The Semantic Gap</h2>
+
+        <div class="image-container">
+            <strong style="display:block; margin-bottom:0.5rem; color:var(--primary);">EMPIRICAL EVIDENCE: TERMINOLOGICAL DISPERSION</strong>
+            <div style="background:#f5f5f5; padding:1rem; border-radius:0.5rem; text-align:left; font-size:0.85rem;">
+                <span class="highlight">Customer Utterance:</span> "my mobile data ran out too quickly"<br>
+                <span class="highlight">Agent Search:</span> "no mobile internet"<br>
+                <span class="highlight">System Classification:</span> "data allowance exhaustion"<br>
+                <span class="highlight">Semantic Analysis:</span> Multiple lexical variants for single concept create retrieval failure
+            </div>
+            <div class="image-caption"><strong>Figure 1</strong>: Example demonstrating the semantic gap between natural language variation and system understanding.</div>
+        </div>
+
+        <div class="cards-grid">
+            <div class="process-card"><h4>Cognitive Load</h4><p>Agents constantly "translated" between customer language and system requirements</p></div>
+            <div class="process-card"><h4>Operational Inefficiency</h4><p>Increased handling time due to failed searches and information retrieval</p></div>
+            <div class="process-card"><h4>Systemic Exclusion</h4><p>Customers using non-standard terminology received inferior service</p></div>
+        </div>
+    </section>
+
+    <!-- PIPELINE: 5 STAGES (interativo) -->
+    <section id="pipeline">
+        <h2>Methodological Pipeline: Corpus → Taxonomy</h2>
+
+        <div class="research-statement">
+            <strong>Methodological Contribution:</strong> A replicable 5-stage framework for transforming unstructured linguistic data into governed knowledge infrastructure — directly applicable to data classification, labeling, and quality assurance workflows.
+        </div>
+
+        <div class="click-hint">
+            <svg class="hand-icon" viewBox="0 0 24 24"><path d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/></svg>
+            Interactive workflow — click the arrows to navigate the 5 stages
+        </div>
+
+        <div class="pipeline-wrapper">
+            <button class="arrow-btn prev" onclick="moveMethodSlide(-1)" id="methodPrevBtn" disabled>❮</button>
+            <div class="pipeline-container" id="methodPipeline">
+                <!-- Stage 1 -->
+                <div class="pipeline-box active" id="methodStep1">
+                    <div class="step-number">1</div>
+                    <strong>Corpus Collection & Analysis</strong>
+                    <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-light);">Systematically collect and analyze natural language data from customer-agent interactions</p>
+                    <p style="font-size:0.8rem; margin-top:0.25rem; color:var(--text-light);"><strong>Methodological Criterion:</strong> Comprehensive data gathering with attention to linguistic variation patterns</p>
+                </div>
+                <!-- Stage 2 -->
+                <div class="pipeline-box" id="methodStep2">
+                    <div class="step-number">2</div>
+                    <strong>Semantic Gap Identification</strong>
+                    <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-light);">Identify systematic divergences between expressed needs and system responses</p>
+                    <p style="font-size:0.8rem; margin-top:0.25rem; color:var(--text-light);"><strong>Methodological Criterion:</strong> Systematic mapping of lexical-conceptual relationships across communication layers</p>
+                </div>
+                <!-- Stage 3 -->
+                <div class="pipeline-box" id="methodStep3">
+                    <div class="step-number">3</div>
+                    <strong>Controlled Vocabulary Design</strong>
+                    <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-light);">Design structured terminological systems with explicit hierarchical, associative, and equivalence relations</p>
+                    <p style="font-size:0.8rem; margin-top:0.25rem; color:var(--text-light);"><strong>Methodological Criterion:</strong> Development of semantic relations between terms following ISO 25964</p>
+                </div>
+                <!-- Stage 4 -->
+                <div class="pipeline-box" id="methodStep4">
+                    <div class="step-number">4</div>
+                    <strong>Implementation & Validation</strong>
+                    <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-light);">Implement vocabulary in operational systems and validate effectiveness with real users</p>
+                    <p style="font-size:0.8rem; margin-top:0.25rem; color:var(--text-light);"><strong>Methodological Criterion:</strong> Empirical testing with operational metrics and user feedback</p>
+                </div>
+                <!-- Stage 5 -->
+                <div class="pipeline-box" id="methodStep5">
+                    <div class="step-number">5</div>
+                    <strong>Taxonomic Expansion</strong>
+                    <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-light);">Scale localized vocabulary to enterprise-wide taxonomic infrastructure</p>
+                    <p style="font-size:0.8rem; margin-top:0.25rem; color:var(--text-light);"><strong>Methodological Criterion:</strong> Development of governance structures for organizational knowledge representation</p>
+                </div>
+            </div>
+            <button class="arrow-btn next" onclick="moveMethodSlide(1)" id="methodNextBtn">❯</button>
+        </div>
+    </section>
+
+    <!-- TRANSFORMATION WORKFLOW (TABS) -->
+    <section id="transformation">
+        <h2>Transformation Workflow: Evidence → Infrastructure</h2>
+
+        <div class="phase-tabs">
+            <button class="phase-tab phase-before active" onclick="openPhase('before')">Evidence: Terminological Dispersion</button>
+            <button class="phase-tab phase-during" onclick="openPhase('during')">Analysis: From Attested Usage to Governance</button>
+            <button class="phase-tab phase-after" onclick="openPhase('after')">Structure: Formalizing the Term within the Taxonomy</button>
+        </div>
+
+        <!-- TAB 1: EVIDENCE -->
+        <div id="phase-before" class="phase-content active">
+            <div style="text-align:justify;">
+                <span class="highlight">Context:</span> A critical service concept — "franquia" (data allowance) — existed in a state of terminological dispersion within customer-agent interactions, with <strong>41 variants</strong> appearing interchangeably.
+            </div>
+            <div class="image-container" style="margin-top:1rem;">
+                <strong style="display:block; margin-bottom:0.5rem; color:var(--primary);">SPEECH ANALYTICS CORPUS EXTRACT</strong>
+                <img src="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%201%20-%20from%20speech%20analytics%20to%20corporate%20taxonomy/images/case-1-from-speech-analytics-to-corporate-taxonomy-data-cap-variants.PNG?raw=true" alt="Speech Analytics Data" style="width:100%; max-width:600px;">
+                <div class="image-caption"><strong>Figure 2</strong>: Boolean proximity operators (NEAR/AND) used for lexical pattern extraction.</div>
+            </div>
+            <div class="analysis-box">
+                <h4>Key Insight</h4>
+                <ul class="analysis-list">
+                    <li><strong>Attested Usage as Evidence:</strong> 41 variants were not "mistakes" but legitimate data points revealing the semantic field's boundaries.</li>
+                    <li><strong>Friction Point Identification:</strong> The gap between customer expressions, agent searches, and system classifications reveals specific placement for terminological intervention.</li>
+                </ul>
+            </div>
+            <div class="critical-finding">
+                <strong>CRITICAL FINDING: THE AGENT'S DILEMMA</strong>
+                <p style="font-size:0.9rem;">Agents developed their own intermediary vocabulary (12 search patterns) that neither matched customer expressions (41 variants) nor aligned perfectly with system classifications (3 terms). This "triple mismatch" added cognitive load and reduced efficiency.</p>
+            </div>
+        </div>
+
+        <!-- TAB 2: ANALYSIS -->
+        <div id="phase-during" class="phase-content">
+            <div style="text-align:justify;">
+                <span class="highlight">Context:</span> Confronted with attested variation, the task shifted from description to <strong>prescriptive normalization</strong>. The goal was to establish a preferred term around which a controlled vocabulary could be structured.
+            </div>
+            <div class="image-container" style="margin-top:1rem;">
+                <strong style="display:block; margin-bottom:0.5rem; color:var(--primary);">NOISE REDUCTION: AVOIDED LEXICAL PATTERNS</strong>
+                <img src="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%201%20-%20from%20speech%20analytics%20to%20corporate%20taxonomy/images/case-1-from-speech-analytics-to-corporate-taxonomy-terms-to-avoid.PNG?raw=true" alt="Negative Constraints Data" style="width:70%; max-width:400px;">
+                <div class="image-caption"><strong>Figure 3</strong>: Negative constraints and procedural noise filtered during taxonomy development.</div>
+            </div>
+            <div class="analysis-box">
+                <h4>Methodological Insight</h4>
+                <ul class="analysis-list">
+                    <li><strong>Usage-Driven Decision Making:</strong> Term selection emerged from systematic analysis of frequency, distribution, and operational relevance.</li>
+                    <li><strong>Systemic Interoperability:</strong> Terms function across search systems, knowledge bases, and agent training materials.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TAB 3: STRUCTURE -->
+        <div id="phase-after" class="phase-content">
+            <div style="text-align:justify;">
+                <span class="highlight">Context:</span> The final stage materialized the analysis into <strong>reusable knowledge infrastructure</strong>. The selected preferred term, "franquia" (data allowance), received formal definition and explicit placement within the growing corporate taxonomy.
+            </div>
+            <div class="image-container" style="margin-top:1rem;">
+                <strong style="display:block; margin-bottom:0.5rem; color:var(--primary);">STRUCTURAL ARTIFACT: TERM DEFINITION</strong>
+                <img src="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%201%20-%20from%20speech%20analytics%20to%20corporate%20taxonomy/images/case-1-from-speech-analytics-to-corporate-taxonomy-data-cap-meaning.PNG?raw=true" alt="Term Definition" style="width:100%; max-width:600px;">
+                <div class="image-caption"><strong>Figure 4</strong>: Formal definition establishing precise conceptual boundaries and technical meaning.</div>
+            </div>
+            <div class="image-container" style="margin-top:1rem;">
+                <strong style="display:block; margin-bottom:0.5rem; color:var(--primary);">TAXONOMIC ARCHITECTURE</strong>
+                <img src="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%201%20-%20from%20speech%20analytics%20to%20corporate%20taxonomy/images/case-1-from-speech-analytics-to-corporate-taxonomy-hierarchical-tree-type-structure.PNG?raw=true" alt="Taxonomy Tree" style="width:100%; max-width:600px;">
+                <div class="image-caption"><strong>Figure 5</strong>: Visualization of the taxonomy expansion from macro-categories to granular data allowance attributes.</div>
+            </div>
+            <div class="image-container" style="margin-top:1rem;">
+                <strong style="display:block; margin-bottom:0.5rem; color:var(--primary);">THESAURUS STRUCTURE (ISO 25964)</strong>
+                <img src="https://github.com/alc-etimo/emlds/blob/main/case%20studies/case%201%20-%20from%20speech%20analytics%20to%20corporate%20taxonomy/images/case-1-from-speech-analytics-to-corporate-taxonomy-usage-cap-broader-term-and-related-term.PNG?raw=true" alt="Thesaurus Relations" style="width:100%; max-width:600px;">
+                <div class="image-caption"><strong>Figure 6</strong>: Semantic relations highlighting hypernymy (BT) and hyponymy (NT) chains.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESULTS (somente o essencial) -->
+    <section id="results">
+        <h2>Measurable Results</h2>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:1rem; margin-top:1rem;">
+            <div style="background:var(--bg-light); padding:1rem; border-radius:0.75rem; border:1px solid var(--border); text-align:center;">
+                <div style="font-size:2rem; font-weight:700; color:var(--accent);">2,700+</div>
+                <div style="font-size:0.85rem; color:var(--text-light);">taxonomy terms</div>
+            </div>
+            <div style="background:var(--bg-light); padding:1rem; border-radius:0.75rem; border:1px solid var(--border); text-align:center;">
+                <div style="font-size:2rem; font-weight:700; color:var(--accent);">67%</div>
+                <div style="font-size:0.85rem; color:var(--text-light);">fewer search failures</div>
+            </div>
+            <div style="background:var(--bg-light); padding:1rem; border-radius:0.75rem; border:1px solid var(--border); text-align:center;">
+                <div style="font-size:2rem; font-weight:700; color:var(--accent);">18%</div>
+                <div style="font-size:0.85rem; color:var(--text-light);">faster resolution</div>
+            </div>
+            <div style="background:var(--bg-light); padding:1rem; border-radius:0.75rem; border:1px solid var(--border); text-align:center;">
+                <div style="font-size:2rem; font-weight:700; color:var(--accent);">30K+</div>
+                <div style="font-size:0.85rem; color:var(--text-light);">agents supported</div>
+            </div>
+        </div>
+
+        <div class="research-statement" style="margin-top:1.5rem;">
+            <strong>Methodological Contribution:</strong> A replicable, scalable framework for transforming unstructured linguistic data into governed knowledge infrastructure — directly applicable to data classification, labeling, and quality assurance workflows.
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <div style="text-align:center; margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--border); font-size:0.8rem; color:var(--text-light);">
+        <p>✦ Data Quality · AI Evaluation · Linguistic QA · RLHF Annotation ✦</p>
+        <p style="margin-top:0.3rem;">Available for remote contract work · Open to skill assessments</p>
+    </div>
+
+    <script>
+        // ── PIPELINE: 5-STAGE SLIDER ──
+        let methodCurrentStep = 0;
+        const methodSteps = document.querySelectorAll('#methodPipeline .pipeline-box');
+        const totalMethodSteps = methodSteps.length;
+
+        function updateMethodPipeline() {
+            methodSteps.forEach((step, index) => {
+                step.classList.toggle('active', index === methodCurrentStep);
+            });
+            document.getElementById('methodPrevBtn').disabled = (methodCurrentStep === 0);
+            document.getElementById('methodNextBtn').disabled = (methodCurrentStep === totalMethodSteps - 1);
+        }
+
+        function moveMethodSlide(direction) {
+            methodCurrentStep = Math.min(Math.max(methodCurrentStep + direction, 0), totalMethodSteps - 1);
+            updateMethodPipeline();
+        }
+
+        // ── TABS: PHASE 1 / 2 / 3 ──
+        function openPhase(phase) {
+            const contents = document.querySelectorAll('.phase-content');
+            const tabs = document.querySelectorAll('.phase-tab');
+            contents.forEach(c => c.classList.remove('active'));
+            tabs.forEach(t => t.classList.remove('active'));
+            document.getElementById('phase-' + phase).classList.add('active');
+            document.querySelector('.phase-tab.phase-' + phase).classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
