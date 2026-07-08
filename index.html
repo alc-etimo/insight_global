@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Quality & AI Evaluation Portfolio — Ariane Lesnyak</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.5;
+            padding: 2rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            text-align: center;
+            padding: 2.5rem 1rem 2rem;
+            background: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            margin-bottom: 2.5rem;
+            border: 1px solid #e9edf2;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background: #1e293b;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            margin: 0.5rem 0 0.25rem;
+        }
+
+        .header .tagline {
+            font-size: 1rem;
+            color: #475569;
+            margin-top: 0.5rem;
+        }
+
+        /* ── METRICS GRID (4 quadros) ── */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .metric-box {
+            background: #ffffff;
+            border-radius: 1rem;
+            padding: 1.2rem 0.5rem;
+            text-align: center;
+            border: 1px solid #e9edf2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: border-color 0.2s;
+        }
+
+        .metric-box:hover {
+            border-color: #2563eb;
+        }
+
+        .metric-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f172a;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .metric-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #64748b;
+            font-weight: 500;
+            margin-top: 0.2rem;
+        }
+
+        /* ── CASE GRID ── */
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .case-card {
+            background: #ffffff;
+            border-radius: 1.25rem;
+            padding: 1.5rem 1.5rem 1.8rem;
+            border: 1px solid #e9edf2;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .case-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -12px rgba(0,0,0,0.1);
+            border-color: #2563eb;
+        }
+
+        .case-card .case-number {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2563eb;
+            background: #eff6ff;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            align-self: flex-start;
+        }
+
+        .case-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .case-card .sub {
+            font-size: 0.85rem;
+            color: #475569;
+            margin-bottom: 0.75rem;
+            flex-grow: 1;
+        }
+
+        /* ── AQUI ESTÁ O SEGREDO: altura fixa para alinhar os impacts ── */
+        .case-card .metrics {
+            font-size: 0.8rem;
+            color: #1e293b;
+            background: #f8fafc;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            margin: 0.5rem 0 1rem;
+            border-left: 3px solid #2563eb;
+            height: 80px; /* ALTURA FIXA para todos os cards */
+            display: flex;
+            align-items: flex-start; /* texto começa do topo */
+	flex-wrap: wrap;
+            
+        }
+
+        .case-card .metrics strong {
+            font-weight: 600;
+        }
+
+        .case-card .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.5rem 0 1rem;
+            min-height: 2.2rem;
+            align-items: flex-start;
+        }
+
+        .case-card .keywords span {
+            font-size: 0.6rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #475569;
+            background: #f1f5f9;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+        }
+
+        .case-card .btn-link {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #2563eb;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: auto;
+            align-self: flex-start;
+            border-bottom: 1px solid transparent;
+            transition: border 0.2s;
+        }
+
+        .case-card .btn-link:hover {
+            border-bottom: 1px solid #2563eb;
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 700px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .metric-number {
+                font-size: 1.4rem;
+            }
+            .case-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>Ariane Lesnyak</h1>
+        <div class="badge">Data Quality Analyst · AI Content Evaluator</div>
+        <p class="tagline">10+ years in text classification, labeling, LLM evaluation &amp; linguistic QA for AI training</p>
+    </div>
+
+    <!-- METRICS GRID (4 quadros) -->
+    <div class="metrics-grid">
+        <div class="metric-box">
+            <span class="metric-number">10K+</span>
+            <span class="metric-label">AI content pieces reviewed &amp; classified</span>
+        </div>
+        <div class="metric-box">
+            <span class="metric-number">2,700+</span>
+            <span class="metric-label">taxonomy terms (ISO 25964)</span>
+        </div>
+        <div class="metric-box">
+            <span class="metric-number">67%</span>
+            <span class="metric-label">fewer search failures</span>
+        </div>
+        <div class="metric-box">
+            <span class="metric-number">35%</span>
+            <span class="metric-label">faster resolution (AHT reduction)</span>
+        </div>
+    </div>
+
+    <!-- CASE STUDIES GRID -->
+    <div class="case-grid">
+
+        <!-- CASE 1: Taxonomy -->
+        <div class="case-card">
+            <span class="case-number">Case 1</span>
+            <h3>From Speech Analytics to Corporate Taxonomy</h3>
+            <p class="sub">Structured 2,700+ terms from 2M+ monthly interactions to enable consistent text classification and retrieval.</p>
+            <div class="metrics">
+                <strong>Impact:</strong> 67% fewer failed searches · 18% faster resolution · 30K+ agents supported
+            </div>
+            <div class="keywords">
+                <span>Text Classification</span><span>Taxonomy</span><span>ISO 25964</span><span>Data Labeling</span>
+            </div>
+            <a class="btn-link" href="https://alc-etimo.github.io/emlds/case-1.html" target="_blank">Read full case →</a>
+        </div>
+
+        <!-- CASE 2: Provenance -->
+        <div class="case-card">
+            <span class="case-number">Case 2</span>
+            <h3>Training Data Provenance Through Output Analysis</h3>
+            <p class="sub">Investigated AI-generated subtitle patterns to trace training data sources, revealing volunteer-sourced content and cross-platform cultural artifacts.</p>
+            <div class="metrics">
+                <strong>Impact:</strong> 5‑stage audit framework · Identified unauthorized content · Dataset analysis
+            </div>
+            <div class="keywords">
+                <span>Provenance Analysis</span><span>Digital Forensics</span><span>Artifact Classification</span><span>Dataset Curation</span>
+            </div>
+            <a class="btn-link" href="https://alc-etimo.github.io/emlds/case-2.html" target="_blank">Read full case →</a>
+        </div>
+
+        <!-- PYTHON MINIPROJECT -->
+        <div class="case-card">
+            <span class="case-number">Mini-Project</span>
+            <h3>Automated Metadata Structuring</h3>
+            <p class="sub">Python script that automates formatting for subtitle metadata, reducing manual work and ensuring consistency.</p>
+            <div class="metrics">
+                <strong>Impact:</strong> 70% less formatting time · 100% consistency · Zero formatting errors
+            </div>
+            <div class="keywords">
+                <span>Python</span><span>Automation</span><span>Text Processing</span><span>Workflow Efficiency</span>
+            </div>
+            <a class="btn-link" href="https://alc-etimo.github.io/emlds/mini-case-python.html" target="_blank">View project →</a>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <p>Data Quality · AI Evaluation · Linguistic QA · RLHF Annotation</p>
+        <p style="margin-top:0.3rem;">Available for remote contract work · Open to skill assessments</p>
+    </div>
+
+</div>
+</body>
+</html>
